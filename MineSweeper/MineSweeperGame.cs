@@ -119,16 +119,6 @@ namespace MineSweeper
             }
         }
         
-        private (int x, int y)[] GetBombs()
-        {
-            List<(int x, int y)> list = new();
-
-            for(int x=0; x < Width; x++)
-                for(int y=0; y < Height; y++)
-                    if (Bombs[x, y]) list.Add((x, y));
-
-            return list.ToArray();
-        }
         public void OpenBlock(int x, int y)
         {
             if (!Flagged[x, y] && !Opened[x, y])
@@ -139,7 +129,7 @@ namespace MineSweeper
                 {
                     StopGame();
                     
-                    BombExploded?.Invoke(this, new LostGameEventArgs(x, y, GetBombs()));
+                    BombExploded?.Invoke(this, new LostGameEventArgs(x, y, GetUnmarkedBombs()));
                 }
                 else
                 {
@@ -169,6 +159,18 @@ namespace MineSweeper
                         if (!Opened[rx, ry]) { OpenBlock(rx, ry); }
             }
         }
+
+        private (int x, int y)[] GetUnmarkedBombs()
+        {
+            List<(int x, int y)> list = new();
+
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    if (Bombs[x, y] && !Flagged[x, y]) list.Add((x, y));
+
+            return list.ToArray();
+        }
+
         private int CountNeighbouringBombs(int x, int y)
         {
             int count = 0;

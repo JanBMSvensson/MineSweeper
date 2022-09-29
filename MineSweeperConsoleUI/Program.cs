@@ -94,6 +94,7 @@ void Game_BombExploded(object? sender, LostGameEventArgs e)
     }
     SetCursorPosition(timeRow, timeCol);
     WriteLine("GAME LOST!");
+    UI.MoveToCell(e.X, e.Y);
 }
 
 void Game_BlockOpen(object? sender, OpenEventArgs e)
