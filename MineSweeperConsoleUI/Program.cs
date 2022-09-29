@@ -72,7 +72,12 @@ void Game_GameWon(object? sender, PassedTimEventArgs e)
 void Game_FlagChanged(object? sender, FlagEventArgs e)
 {
     if (e.IsFlagged)
+    {
+        var old = ForegroundColor;
+        ForegroundColor = ConsoleColor.Red;
         Write(UI.FlagChar);
+        ForegroundColor = old;
+    }
     else
         Write(UI.HiddenChar);
 
