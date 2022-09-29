@@ -94,7 +94,7 @@ void Game_BlockOpen(object? sender, OpenEventArgs e)
 void Game_GameTime(object? sender, PassedTimEventArgs e)
 {
     SetCursorPosition(timeRow, timeCol);
-    Write($"{((int)e.Time.Minutes).ToString().PadRight(2,'0')}:{e.Time.Seconds.ToString().PadLeft(2,'0')} ");
+    Write($"{((int)e.Time.Minutes).ToString().PadLeft(2,'0')}:{e.Time.Seconds.ToString().PadLeft(2,'0')} ");
     UI.MoveToCell(UI.X, UI.Y);
 }
 
