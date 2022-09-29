@@ -39,6 +39,15 @@ namespace MineSweeper
             IsFlagged = isFlagged;
         }
     }
+    public class LostGameEventArgs : PositionEventArgs
+    {
+        public (int x, int y)[] BombLocations { get; }
+
+        internal LostGameEventArgs(int x, int y, (int x, int y)[] bombLocaltions) : base(x,y)
+        {
+            BombLocations = bombLocaltions;
+        }
+    }
 
     public class MineSweeperGame
     {
@@ -49,7 +58,7 @@ namespace MineSweeper
         private DateTime GameStarted;
         private DateTime GameFinished;
 
-        public event EventHandler<PositionEventArgs>? BombExploded;
+        public event EventHandler<LostGameEventArgs>? BombExploded;
         public event EventHandler<OpenEventArgs>? BlockOpen;
         public event EventHandler<FlagEventArgs>? FlagChanged;
         public event EventHandler<PassedTimEventArgs>? GameTime;
@@ -110,6 +119,16 @@ namespace MineSweeper
             }
         }
         
+        private (int x, int y)[] GetBombs()
+        {
+            List<(int x, int y)> list = new();
+
+            for(int x=0; x < Width; x++)
+                for(int y=0; y < Height; y++)
+                    if (Bombs[x, y]) list.Add((x, y));
+
+            return list.ToArray();
+        }
         public void OpenBlock(int x, int y)
         {
             if (!Flagged[x, y] && !Opened[x, y])
@@ -119,7 +138,8 @@ namespace MineSweeper
                 if (Bombs[x, y])
                 {
                     StopGame();
-                    BombExploded?.Invoke(this, new PositionEventArgs(x, y));
+                    
+                    BombExploded?.Invoke(this, new LostGameEventArgs(x, y, GetBombs()));
                 }
                 else
                 {

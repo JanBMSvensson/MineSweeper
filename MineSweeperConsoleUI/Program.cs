@@ -84,8 +84,15 @@ void Game_FlagChanged(object? sender, FlagEventArgs e)
     UI.MoveToCell(e.X, e.Y);
 }
 
-void Game_BombExploded(object? sender, PositionEventArgs e)
+void Game_BombExploded(object? sender, LostGameEventArgs e)
 {
+    ForegroundColor = ConsoleColor.DarkRed;
+    foreach(var item in e.BombLocations)
+    {
+        UI.MoveToCell(item.x, item.y);
+        Write(UI.FlagChar);
+    }
+    SetCursorPosition(timeRow, timeCol);
     WriteLine("GAME LOST!");
 }
 
